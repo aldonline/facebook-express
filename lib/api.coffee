@@ -20,13 +20,10 @@ get_app_access_token = ( app_id, app_secret, cb ) ->
       cb response, null # TODO: improve error handling
 
 make_raw_api_call = (access_token, method, path, params, cb, eb) ->
-  console.log 'raw_api_call'
-  console.log [access_token, method, path, params, cb, eb]
   p = {}
   ( p[k] = v ) for own k, v of params
   p.access_token = access_token
-  if path.indexOf('/') isnt 0
-    path = '/' + path
+  path = '/' + path unless 0 is path.indexOf '/'
   opts = 
     uri: 'https://graph.facebook.com' + path + '?' + querystring.stringify p
     method: method
