@@ -30,7 +30,7 @@ class App extends events.EventEmitter
     @api = api.get_api_for_app @opts.app_id, @opts.app_secret
   
   init: ( server ) ->
-    # cookie decoder middleware ( will append fb_cookie to request )
+    # cookie decoder middleware ( will append fbx_cookie to request )
     server.use cookie.middleware @opts.app_id, @opts.app_secret
     # to serve client-side javascript
     server.use (req, res, next) =>

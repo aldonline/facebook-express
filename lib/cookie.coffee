@@ -21,8 +21,7 @@ get_cookies_from_request = (req) ->
 
 # will try to extract the facebook cookie from the given request
 get_facebook_cookie_from_request = ( req, app_id, app_secret ) ->
-  cookies = get_facebook_cookie_from_request req
-  if ( c = cookies?["fbs_#{app_id}"] )?
+  if ( c = get_cookies_from_request(req)?["fbs_#{app_id}"] )?
     args =  querystring.parse c
     keys = (k for k of args)
     keys.sort()
@@ -32,7 +31,7 @@ get_facebook_cookie_from_request = ( req, app_id, app_secret ) ->
 
 middleware = ( app_id, app_secret ) ->
   ( req, res, next ) ->
-    req.fb_cookie = c if ( c = get_facebook_cookie_from_request req, app_id, app_secret )?
+    req.fbx_cookie = c if ( c = get_facebook_cookie_from_request req, app_id, app_secret )?
     next()
 
 exports.middleware = middleware
