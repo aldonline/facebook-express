@@ -1,0 +1,13 @@
+{
+  "name": "facebook-express",
+  "description": "Facebook Integration for Express",
+  "version": "0.0.1",
+  "author": "Aldo Bucchi <aldo.bucchi@gmail.com>",
+  "dependencies": {
+    "request": ">= 1.9.0",
+    "coffee-script": ">= 1.0.0"
+  },
+  "keywords": ["facebook", "express"],
+  "directories": { "lib": "./lib" },
+  "engines": { "node": ">= 0.2.6" }
+}
