@@ -32,12 +32,7 @@ get_facebook_cookie_from_request = ( req, app_id, app_secret ) ->
 
 middleware = ( app_id, app_secret ) ->
   ( req, res, next ) ->
-    if ( c = req?.cookies?["fbs_#{app_id}"] )?
-      args =  querystring.parse c
-      keys = (k for k of args)
-      keys.sort()
-      payload = ( "#{k}=#{args[k]}" for k in keys when k isnt 'sig' ).join ''
-      req.fb_cookie = args if args.sig is md5 payload + app_secret
+    req.fb_cookie = c if ( c = get_facebook_cookie_from_request req, app_id, app_secret )?
     next()
 
 exports.middleware = middleware
