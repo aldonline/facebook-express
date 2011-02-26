@@ -44,14 +44,11 @@ positional_call = (access_token, args) ->
   path = null
   params = {}
   cb = null
-
-  types = ( (if a then typeof a else 'undefined') for a in args ).join ','
-  switch types
+  switch ( typeof a for a in args ).join ','
     when 'string,function' then [path, cb] = args
     when 'string,string,function' then [path, method, cb] = args
     when 'string,object,function' then [path, params, cb] = args
-    when 'path,method,params,cb' then [path, method, params, cb] = args
-
+    when 'string,string,object,function' then [path, method, params, cb] = args
   make_raw_api_call access_token, method, path, params, cb
 
 # returns a function that will queue all calls
