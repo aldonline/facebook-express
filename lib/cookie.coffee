@@ -16,8 +16,7 @@ get_cookies_from_request = (req) ->
     val = pair.substr(++eq_idx, pair.length).trim()
     if val[0] is '"'
       val = val.slice(1, -1)
-    if cookies[key] is undefined
-       cookies[key] = querystring.unescape val, true
+      cookies[key] ?= querystring.unescape val, true
   cookies
 
 # will try to extract the facebook cookie from the given request
