@@ -33,7 +33,6 @@ get_facebook_cookie_from_request = ( req, app_id, app_secret ) ->
 
 middleware = ( app_id, app_secret ) ->
   ( req, res, next ) ->
-    # TODO: add cookie decoder logic ( to tackle the case when cookies are not being decoded )
     if ( c = req?.cookies?["fbs_#{app_id}"] )?
       args =  querystring.parse c
       keys = (k for k of args)
