@@ -1,16 +1,18 @@
-fbt = require '../../lib/facebook-toolkit'
+facebook_express = require '../../lib/facebook-express'
 express = require 'express'
+config = require '../../config'
 
 server = express.createServer()
 server.register '.coffee', require 'coffeekup'
 server.set 'view engine', 'coffee'
 server.use express.staticProvider __dirname + '/public'
+# server.use express.bodyDecoder()
 
 # create a facebook app helper
-fbapp = new fbt.create_app
-  app_id: process.env.FB_APP_ID
-  app_secret: process.env.FB_APP_SECRET
-  domain: 'localhost'
+fbx = facebook_express.create_helper
+  app_id: config.app_id
+  app_secret: config.app_secret
+  domain: config.domain
   registration:
     fields: [
       {name:'name'}
@@ -22,14 +24,19 @@ fbapp = new fbt.create_app
       {name:'investor', description:'Are you an Investor?', type:'checkbox'}
       {name:'developer', description:'Are you a Developer?', type:'checkbox'}
     ]
+  on_registration : ( data, cb ) ->
+    console.log 'got registration data. it was really easy.'
+    console.log data
+    cb 'http://hellokisses.com/'
 
 # we need to setup some middleware on our server
-fbapp.init server
+# this will set up some routes ( for example /__fbx.js, /registration_callback, etc )
+fbx.init server
 
 server.get '/', (req, res) ->
   res.render 'index', layout: no
 
 server.get '/register', (req, res) ->
-  res.render 'register', layout: no, context:{fbapp:fbapp}
+  res.render 'register', layout: no, context:{fbx:fbx}
 
 server.listen 80

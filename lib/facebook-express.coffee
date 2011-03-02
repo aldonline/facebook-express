@@ -6,17 +6,21 @@ http = require 'http'
 URL = require 'url'
 request = require 'request'
 events = require 'events'
+querystring = require 'querystring'
+crypto = require 'crypto'
 
 cookie = require './cookie'
 client = require './client'
 api = require './api'
 
-class App extends events.EventEmitter
+class Helper extends events.EventEmitter
   constructor: ( opts ) ->
     # base options
     @opts =
-      script: '/__fbt.js'
+      script: '/__fbx.js'
       locale: 'en_US'
+      url: 'http://localhost'
+      registration_callback_url: '/registration_callback'
     
     # option overrides
     (@opts[k] = v) for own k, v of opts
@@ -29,6 +33,9 @@ class App extends events.EventEmitter
   
     @api = api.get_api_for_app @opts.app_id, @opts.app_secret
   
+  get_registration_callback_url : ->
+    @opts.url + @opts.registration_callback_url
+  
   init: ( server ) ->
     # cookie decoder middleware ( will append fbx_cookie to request )
     server.use cookie.middleware @opts.app_id, @opts.app_secret
@@ -39,9 +46,28 @@ class App extends events.EventEmitter
         res.headers['Content-Type'] = 'application/javascript'
         res.headers['Cache-Control'] = 'no-cache'
         res.send client.generate_code @client_opts
-      else if req.url is '/log'
-        console.log req
-        res.send 'log!'
+      else if req.url is @opts.registration_callback_url
+        get_signed_request_from_http_request req, (signed_request) =>
+          parts = signed_request.split '.'
+          sig = base64UrlToBase64 parts[0]
+          payload = parts[1]
+          data = JSON.parse base64UrlToString payload
+          console.log [sig, data]
+          # lets verify
+          if data.algorithm.toUpperCase() isnt 'HMAC-SHA256'
+            res.send 'Unknown algorithm. Expected HMAC-SHA256'
+          hmac = crypto.createHmac 'sha256', @opts.app_secret
+          hmac.update payload
+          expected_sig = hmac.digest 'base64'
+          if sig isnt expected_sig
+            console.log 'expected [' + expected_sig + '] got [' + sig + ']'
+            res.send 'Hello, this is my app! you are CHEATING! .. expected [' + expected_sig + '] got [' + sig + ']'
+          else
+            if ( rh = @opts.on_registration )?
+              rh data.registration, ( redirect_url ) =>
+                res.redirect redirect_url || @opts.on_registration_redirect_url
+            else
+              console.log 'A user registration happened and there is no registration handler defined'
       else
         next()
   
@@ -51,13 +77,29 @@ class App extends events.EventEmitter
     '<fb:registration 
       fb_only="true"
       fields="' + fields + '" 
-      redirect-uri="http://localhost/"
+      redirect-uri="' + @get_registration_callback_url() + '"
       width="530">
     </fb:registration>'
 
+get_req_payload = (req, cb) ->
+  if req.rawBody?
+    cb req.rawBody
+  req.setEncoding 'utf8'
+  data = ''
+  req.on 'data', (chunk) -> data += chunk
+  req.on 'end', -> cb data
 
-exports.create_app = (opts) -> new App opts
+get_signed_request_from_http_request = (req, cb) ->
+  get_req_payload req, (payload) ->
+    cb querystring.parse(payload).signed_request
 
+base64ToString = (str) -> ( new Buffer str || '', 'base64' ).toString "ascii"
+base64UrlToString = (str) -> base64ToString base64UrlToBase64 str
+base64UrlToBase64 = (str) -> 
+  ( str = str + '=' ) for i in [0...(4 - str.length%4)]
+  str.replace(/\-/g, '+').replace(/_/g, '/')
+
+exports.create_helper = (opts) -> new Helper opts
 
 ###
 to debug on the console:

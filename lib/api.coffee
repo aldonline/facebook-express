@@ -62,7 +62,7 @@ get_api = ->
     token = t
     func.token = t
     ( positional_call token, queued ) for queued in queue
-    queue = null
+    queue = []
   func
 
 # should behave just like the client side SDK
