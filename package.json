@@ -1,13 +1,16 @@
 {
   "name": "facebook-express",
-  "description": "Facebook Integration for Express",
+  "description": "Facebook API and best-practices abstraction layer for express",
   "version": "0.0.1",
-  "author": "Aldo Bucchi <aldo.bucchi@gmail.com>",
+  "author": "Aldo Bucchi <aldo.bucchi@gmail.com>", 
   "dependencies": {
     "request": ">= 1.9.0",
-    "coffee-script": ">= 1.0.0"
+    "coffee-script": ">= 1.0.1"
   },
   "keywords": ["facebook", "express"],
   "directories": { "lib": "./lib" },
-  "engines": { "node": ">= 0.2.6" }
+  "engines": { "node": ">= 0.4.1" },
+  "repository": 
+   { "type": "git",
+     "url": "git://github.com/aldonline/facebook-express.git" }
 }
