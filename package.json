@@ -1,7 +1,7 @@
 {
   "name": "facebook-express",
   "description": "Facebook API and best-practices abstraction layer for express",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Aldo Bucchi <aldo.bucchi@gmail.com>", 
   "dependencies": {
     "request": ">= 1.9.0",
