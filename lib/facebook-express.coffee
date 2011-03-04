@@ -64,7 +64,7 @@ class Helper extends events.EventEmitter
             res.send 'Hello, this is my app! you are CHEATING! .. expected [' + expected_sig + '] got [' + sig + ']'
           else
             if ( rh = @opts.on_registration )?
-              rh data.registration, ( redirect_url ) =>
+              rh data, ( redirect_url ) =>
                 res.redirect redirect_url || @opts.on_registration_redirect_url
             else
               console.log 'A user registration happened and there is no registration handler defined'
