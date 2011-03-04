@@ -52,7 +52,6 @@ class Helper extends events.EventEmitter
           sig = base64UrlToBase64 parts[0]
           payload = parts[1]
           data = JSON.parse base64UrlToString payload
-          console.log [sig, data]
           # lets verify
           if data.algorithm.toUpperCase() isnt 'HMAC-SHA256'
             res.send 'Unknown algorithm. Expected HMAC-SHA256'
