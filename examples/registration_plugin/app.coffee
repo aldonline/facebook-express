@@ -27,7 +27,7 @@ fbx = facebook_express.create_helper
   on_registration : ( data, cb ) ->
     console.log 'got registration data. it was really easy.'
     console.log data
-    cb 'http://hellokisses.com/'
+    cb '/'
 
 # we need to setup some middleware on our server
 # this will set up some routes ( for example /__fbx.js, /registration_callback, etc )
