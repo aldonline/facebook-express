@@ -13,6 +13,7 @@ fbx = facebook_express.create_helper
   app_id: config.app_id
   app_secret: config.app_secret
   domain: config.domain
+  url: 'http://' + config.domain
   registration:
     fields: [
       {name:'name'}

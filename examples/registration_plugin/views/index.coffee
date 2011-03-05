@@ -9,7 +9,7 @@ html ->
       h1 'Hello World'
       text '<fb:login-button id="fb-login-button"
               autologoutlink="true"
-              registration-url="http://localhost/register" 
+              registration-url="http://localhost.local/register" 
               fb-only="true"
               style="display:block"
               ></fb:login-button>'
