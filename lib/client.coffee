@@ -30,7 +30,7 @@ client_side_code = -> # this function defines the base scope
           window.location.reload()
   $ ->
     # client-side opts overrides
-    ( opts[k] = v ) for k, v of window.__fbt if window.__fbt?
+    ( opts[k] = v ) for k, v of window.__fbx if window.__fbx?
     load_script()
 
 exports.generate_code = (opts) ->
