@@ -1,19 +1,16 @@
-###
-server side facebook logic
-###
 
 http = require 'http'
 URL = require 'url'
 request = require 'request'
-events = require 'events'
 querystring = require 'querystring'
 crypto = require 'crypto'
 
 cookie = require './cookie'
 client = require './client'
 api = require './api'
+util = require './util'
 
-class Helper extends events.EventEmitter
+class Helper
   constructor: ( opts ) ->
     # base options
     @opts =
@@ -49,9 +46,9 @@ class Helper extends events.EventEmitter
       else if req.url is @opts.registration_callback_url
         get_signed_request_from_http_request req, (signed_request) =>
           parts = signed_request.split '.'
-          sig = base64UrlToBase64 parts[0]
+          sig = util.base64_url_to_base64 parts[0]
           payload = parts[1]
-          data = JSON.parse base64UrlToString payload
+          data = JSON.parse util.base64_url_to_str payload
           # lets verify
           if data.algorithm.toUpperCase() isnt 'HMAC-SHA256'
             res.send 'Unknown algorithm. Expected HMAC-SHA256'
@@ -60,13 +57,13 @@ class Helper extends events.EventEmitter
           expected_sig = hmac.digest 'base64'
           if sig isnt expected_sig
             console.log 'expected [' + expected_sig + '] got [' + sig + ']'
-            res.send 'Hello, this is my app! you are CHEATING! .. expected [' + expected_sig + '] got [' + sig + ']'
+            res.send 'Signature Check Failed. Payload has been modified'
           else
             if ( rh = @opts.on_registration )?
               rh data, ( redirect_url ) =>
                 res.redirect redirect_url || @opts.on_registration_redirect_url
             else
-              console.log 'A user registration happened and there is no registration handler defined'
+              console.log 'FBX: A user registration happened and there is no registration handler defined'
       else
         next()
   
@@ -80,23 +77,9 @@ class Helper extends events.EventEmitter
       width="530">
     </fb:registration>'
 
-get_req_payload = (req, cb) ->
-  if req.rawBody?
-    cb req.rawBody
-  req.setEncoding 'utf8'
-  data = ''
-  req.on 'data', (chunk) -> data += chunk
-  req.on 'end', -> cb data
-
 get_signed_request_from_http_request = (req, cb) ->
-  get_req_payload req, (payload) ->
+  util.get_req_payload req, (payload) ->
     cb querystring.parse(payload).signed_request
-
-base64ToString = (str) -> ( new Buffer str || '', 'base64' ).toString "ascii"
-base64UrlToString = (str) -> base64ToString base64UrlToBase64 str
-base64UrlToBase64 = (str) -> 
-  ( str = str + '=' ) for i in [0...(4 - str.length%4)]
-  str.replace(/\-/g, '+').replace(/_/g, '/')
 
 exports.create_helper = (opts) -> new Helper opts
 
@@ -123,7 +106,6 @@ these are the state changes we need to cater for:
 unknown --> connected = user logged in via facebook popup = reload()
 unknown --> notConnected = user logged in, but is not registered to our app = show registration form
 connected --> unknown = user logged out
-
 
 ###
 
