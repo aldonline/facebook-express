@@ -35,7 +35,7 @@ fbx = facebook_express.create_helper
 fbx.init server
 
 server.get '/', (req, res) ->
-  res.render 'index', layout: no
+  res.render 'index', layout: no, context:{fbx:fbx}
 
 server.get '/register', (req, res) ->
   res.render 'register', layout: no, context:{fbx:fbx}

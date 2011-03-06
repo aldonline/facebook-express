@@ -72,6 +72,13 @@ class Helper
       redirect-uri="' + @get_registration_callback_url() + '"
       width="530">
     </fb:registration>'
+  
+  # dev-time convenience method. we use it in the examples.
+  # you will find yourself visiting this link often to remove the app.
+  # so you can register again.
+  # you won't be using this in your real app
+  get_app_settings_url : ->
+    "http://www.facebook.com/settings/?tab=applications&app_id=#{@opts.app_id}"
 
 get_signed_request_from_http_request = (req, cb) ->
   util.get_req_payload req, (payload) ->

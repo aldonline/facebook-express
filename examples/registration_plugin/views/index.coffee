@@ -13,3 +13,5 @@ html ->
               fb-only="true"
               style="display:block"
               ></fb:login-button>'
+      a href: @fbx.get_app_settings_url(), ->
+        'Go to Application Settings on Facebook.com'
