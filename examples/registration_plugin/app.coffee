@@ -12,8 +12,7 @@ server.use express.staticProvider __dirname + '/public'
 fbx = facebook_express.create_helper
   app_id: config.app_id
   app_secret: config.app_secret
-  domain: config.domain
-  url: 'http://' + config.domain
+  url: config.url
   registration:
     fields: [
       {name:'name'}

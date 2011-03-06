@@ -16,7 +16,7 @@ catch error
   exports.get_config = ->
     app_id: "111111111111"
     app_secret: "111111111111111"
-    domain: "localhost"
+    url: "http://localhost"
 
   ########################################  
   ########################################

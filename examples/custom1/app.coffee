@@ -11,7 +11,7 @@ server.use express.staticProvider __dirname + '/public'
 fbx = new facebook_express.create_app
   app_id: config.app_id
   app_secret: config.app_secret
-  domain: config.domain
+  url: config.url
 
 # we need to setup some middleware on our server
 fbx.init server
