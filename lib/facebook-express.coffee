@@ -1,9 +1,7 @@
-
 http = require 'http'
 URL = require 'url'
 request = require 'request'
 querystring = require 'querystring'
-crypto = require 'crypto'
 
 cookie = require './cookie'
 client = require './client'
@@ -52,9 +50,7 @@ class Helper
           # lets verify
           if data.algorithm.toUpperCase() isnt 'HMAC-SHA256'
             res.send 'Unknown algorithm. Expected HMAC-SHA256'
-          hmac = crypto.createHmac 'sha256', @opts.app_secret
-          hmac.update payload
-          expected_sig = hmac.digest 'base64'
+          expected_sig = util.get_hmac_sha256_signature payload, @opts.app_secret
           if sig isnt expected_sig
             console.log 'expected [' + expected_sig + '] got [' + sig + ']'
             res.send 'Signature Check Failed. Payload has been modified'
