@@ -38,6 +38,7 @@ class Helper
     server.use (req, res, next) =>
       # send javascript stub
       if req.url is @opts.script and req.method is 'GET'
+        res.headers ?= {}
         res.headers['Content-Type'] = 'application/javascript'
         res.headers['Cache-Control'] = 'no-cache'
         res.send client.generate_code @client_opts
