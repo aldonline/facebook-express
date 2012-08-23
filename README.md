@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/aldonline/facebook-express.png)](http://travis-ci.org/aldonline/facebook-express)
 Facebook Express
 =============================================
 
