@@ -1,12 +1,12 @@
 Facebook Express
 =============================================
 
+THIS IS A REALLY OLD MODULE. DON'T USE IT. EXPRESS HAS COME A LONG WAY SINCE.
+
 Getting Started
 --------------------
 
 ### Install
-
-NOT PUBLISHED YET. INCUBATING
 
     npm install facebook-express
 
